@@ -129,10 +129,9 @@ services:
       - "8080:8080"
     networks:
       - plax-net
-    volumes:
-      - ./plax-backend/uploads:/app/uploads
-      - ./plax-backend/.env:/app/.env        # <- monta .env en /app/.env
-      - ./plax-backend/.env:/.env 
+    #volumes:
+      #- ./plax-backend/uploads:/app/uploads
+      #- ./plax-backend/.env:/app/.env        # <- monta .env en /app/.env
     depends_on:
       mysql-router:
         condition: service_healthy
