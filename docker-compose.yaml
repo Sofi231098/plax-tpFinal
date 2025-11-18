@@ -122,7 +122,6 @@ services:
   backend:
     image: sofiayanez98/plax-backend:latest
     container_name: plax_backend
-    build: ./plax-backend/
     restart: always
     env_file:
       - ./plax-backend/.env
@@ -146,7 +145,6 @@ services:
   frontend:
     image: sofiayanez98/plax-frontend:latest
     container_name: plax_frontend
-    build: ./plax-frontend/
     restart: always
     environment:
       VITE_API_URL: http://localhost:8080
