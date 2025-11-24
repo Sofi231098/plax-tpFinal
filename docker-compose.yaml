@@ -117,10 +117,11 @@ services:
       retries: 30
       start_period: 60s
 
+  
   # Backend de la aplicación
   backend:
+    image: sofiayanez98/plax-backend:latest
     container_name: plax_backend
-    build: ./plax-backend/
     restart: always
     env_file:
       - ./plax-backend/.env
@@ -132,11 +133,13 @@ services:
       - ./plax-backend/uploads:/app/uploads
     depends_on:
       - mysql-router
+    labels:
+      com.centurylinklabs.watchtower.enable: "true"
 
   # Frontend de la aplicación
   frontend:
+    image: sofiayanez98/plax-frontend:latest
     container_name: plax_frontend
-    build: ./plax-frontend/
     restart: always
     environment:
       VITE_API_URL: http://localhost:8080
@@ -148,6 +151,8 @@ services:
       - ./plax-frontend/default.conf:/etc/nginx/conf.d/default.conf
     depends_on:
       - backend
+    labels:
+      com.centurylinklabs.watchtower.enable: "true"
 
   # Cliente MySQL (phpMyAdmin)
   phpmyadmin:
@@ -182,6 +187,7 @@ services:
       - ./scripts/backup.sh:/usr/local/bin/backup.sh
     command: [ "bash", "-c", "chmod +x /usr/local/bin/backup.sh && /usr/local/bin/backup.sh" ]
 
+  # Contenedor para ejecutar MySQL Tuner y Percona Toolkit
   mysql-tuner:
     build:
       context: .
@@ -194,6 +200,7 @@ services:
       mysql-server-1:
         condition: service_healthy
 
+  # Monitoreo con Prometheus y Grafana
   mysqld-exporter:
     container_name: mysqld-exporter
     image: prom/mysqld-exporter:v0.16.0
@@ -237,6 +244,15 @@ services:
       - plax-net
     depends_on:
       - prometheus
+
+  # Watchtower - auto-update container images
+  watchtower:
+    image: containrrr/watchtower:latest
+    container_name: watchtower
+    restart: always
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    command: --interval 60 --label-enable --cleanup
 
 volumes:
   mysql1_data:

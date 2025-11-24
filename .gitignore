@@ -1,3 +1,8 @@
-monitoreo/
+monitoreo/grafana/data/
+monitoreo/prometheus/data/
 backups/
 log/
+
+mysql-router.env
+mysql-server.env
+mysql-shell.env
