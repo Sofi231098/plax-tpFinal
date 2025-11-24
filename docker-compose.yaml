@@ -121,6 +121,7 @@ services:
   # Backend de la aplicación
   backend:
     image: sofiayanez98/plax-backend:latest
+    # build: ./plax-backend/
     container_name: plax_backend
     restart: always
     env_file:
@@ -139,6 +140,7 @@ services:
   # Frontend de la aplicación
   frontend:
     image: sofiayanez98/plax-frontend:latest
+    # build: ./plax-frontend/
     container_name: plax_frontend
     restart: always
     environment:
@@ -200,7 +202,7 @@ services:
       mysql-server-1:
         condition: service_healthy
 
-  # Monitoreo con Prometheus y Grafana
+  # # Monitoreo con Prometheus y Grafana
   mysqld-exporter:
     container_name: mysqld-exporter
     image: prom/mysqld-exporter:v0.16.0
@@ -252,6 +254,8 @@ services:
     restart: always
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
+    depends_on:
+      - grafana
     command: --interval 60 --label-enable --cleanup
 
 volumes:
