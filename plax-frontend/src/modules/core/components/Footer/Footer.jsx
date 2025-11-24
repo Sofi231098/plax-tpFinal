@@ -32,7 +32,7 @@ export const Footer = () => {
                     <img src={Isologo} height={40} width={40} alt="Hotel" />
                     <figcaption>&copy; 2024 PLAX</figcaption>
                     {/* INTEGRANTES DEL GRUPO HIA */}
-                    <figcaption>Integrantes: Yufra, Marcelo Alejandro</figcaption>
+                    <figcaption>Integrantes: Yufra, Alejandro 4308 - ...</figcaption>
                 </figure>
             </Link>
             <div className='footer__social'>

@@ -1,4 +1,4 @@
-INSERT INTO users (id, email, firstname, lastname, password, role)
+INSERT IGNORE INTO users (id, email, firstname, lastname, password, role)
 VALUES (UUID_TO_BIN('8b07383c-cfbe-4dfe-b122-3ee0f5ac4230'), 'admin@gmail.com', 'admin', 'admin',
         '$2a$12$lVJtPYap0O4AM.jNpV8eYeDzTYuVZlDmGLTWZ0BxPbcYfbfusfzq2', 'ADMIN'),
        (UUID_TO_BIN('8b07383c-cfbe-4dfe-b122-3ee0f5ac4231'), 'maxi11carrillo@gmail.com', 'Maximiliano', 'Carrillo',
@@ -12,7 +12,7 @@ VALUES (UUID_TO_BIN('8b07383c-cfbe-4dfe-b122-3ee0f5ac4230'), 'admin@gmail.com', 
        (UUID_TO_BIN('8b07383c-cfbe-4dfe-b122-3ee0f5ac4235'), 'goku@gmail.com', 'Goku', 'Son',
         '$2a$12$3QmyP5Ad4l/o4082KVPpmuaqtzjEaDlSVE2zMeBILbykC17OJKBbi', 'USER');
 
-INSERT INTO features (id, icon, name)
+INSERT IGNORE INTO features (id, icon, name)
 VALUES (UUID_TO_BIN('1c9f77b1-1be1-4b18-a43b-287b0989238e'), 'wifi.svg', 'Wi-fi'),
        (UUID_TO_BIN('2dca07fc-7c1d-4069-9057-f5c55a1c0ab1'), 'aire-acondicionado.svg', 'Aire Acondicionado'),
        (UUID_TO_BIN('9f8c1be1-6200-4533-a1fa-c23c12d0e0b4'), 'ducha.svg', 'Ducha'),
@@ -29,7 +29,7 @@ VALUES (UUID_TO_BIN('1c9f77b1-1be1-4b18-a43b-287b0989238e'), 'wifi.svg', 'Wi-fi'
        (UUID_TO_BIN('8105d467-b09d-4631-b5c1-d2f8b5d8f110'), 'chimenea.svg', 'Chimenea'),
        (UUID_TO_BIN('4f21d2f0-63c3-41e9-b91d-8c81f83a9688'), 'lavadora.svg', 'Lavadora');
 
-INSERT INTO categories (id, description, image, name)
+INSERT IGNORE INTO categories (id, description, image, name)
 VALUES (UUID_TO_BIN('be39b7dd-fe38-44f4-8ada-451681d01c7f'), 'Alojamientos en hoteles con servicios completos',
         'hotel.jpg', 'Hotel'),
        (UUID_TO_BIN('be39b7dd-fe38-44f4-8ada-451681d01c8f'), 'Alquileres de apartamentos para estancias largas',
@@ -41,7 +41,7 @@ VALUES (UUID_TO_BIN('be39b7dd-fe38-44f4-8ada-451681d01c7f'), 'Alojamientos en ho
        (UUID_TO_BIN('be39b7dd-fe38-44f4-8ada-451681d01c4f'), 'Alojamientos rurales y tranquilos en el campo',
         'cabana.jpg', 'Cabaña');
 
-INSERT INTO addresses (id, city, country, street)
+INSERT IGNORE INTO addresses (id, city, country, street)
 VALUES (UUID_TO_BIN('fccf90c9-288e-451c-9543-d03375c9efab'), 'Buenos Aires', 'Argentina', 'Av. Playa 123'),
        (UUID_TO_BIN('b1b1b1b1-288e-451c-9543-d03375c9efab'), 'Buenos Aires', 'Argentina', 'Calle del Sol 456'),
        (UUID_TO_BIN('c2c2c2c2-288e-451c-9543-d03375c9efab'), 'Mendoza', 'Argentina', 'Calle Libertad 789'),
@@ -49,7 +49,7 @@ VALUES (UUID_TO_BIN('fccf90c9-288e-451c-9543-d03375c9efab'), 'Buenos Aires', 'Ar
        (UUID_TO_BIN('e4e4e4e4-288e-451c-9543-d03375c9efab'), 'Neuquén', 'Argentina', 'Ruta 40 Km 900'),
        (UUID_TO_BIN('f5f5f5f5-288e-451c-9543-d03375c9efab'), 'Buenos Aires', 'Argentina', 'Av. Costa 123');
 
-INSERT INTO stay_policies (id, policy, description)
+INSERT IGNORE INTO stay_policies (id, policy, description)
 VALUES (UUID_TO_BIN('fccf90c9-288e-451c-9543-d03375c9efab'), 'Prohibido la entrada de animales',
         'Está completamente prohibido la entrada de cualquier tipo de animal a las instalaciones'),
        (UUID_TO_BIN('b1b1b1b1-288e-451c-9543-d03375c9efab'), 'Prohibido fumar',
@@ -81,7 +81,7 @@ VALUES (UUID_TO_BIN('fccf90c9-288e-451c-9543-d03375c9efab'), 'Prohibido la entra
        (UUID_TO_BIN('4f21d2f0-63c3-41e9-b91d-8c81f83a9678'), 'Check-out antes de las 12hs',
         'El check-out se realiza antes de las 12hs');
 
-INSERT INTO stays (id, appreciation, description, name, price, id_address, id_category)
+INSERT IGNORE INTO stays (id, appreciation, description, name, price, id_address, id_category)
 VALUES (UUID_TO_BIN('8a9b6e3d-27b2-4a0d-9992-d35031e5c7a8'), 0, 'Hotel frente al mar, con todas las comodidades',
         'Hotel Duna', 50000, UUID_TO_BIN('fccf90c9-288e-451c-9543-d03375c9efab'),
         UUID_TO_BIN('be39b7dd-fe38-44f4-8ada-451681d01c7f')),
@@ -99,7 +99,7 @@ VALUES (UUID_TO_BIN('8a9b6e3d-27b2-4a0d-9992-d35031e5c7a8'), 0, 'Hotel frente al
         UUID_TO_BIN('be39b7dd-fe38-44f4-8ada-451681d01c4f'));
 -- Falta agregar las estancias de abajo
 
--- INSERT INTO
+-- INSERT IGNORE INTO
 --   stays (price, id, id_category, address, description, name)
 -- VALUES
 --   (27000, UUID_TO_BIN('2d7a23fe-b512-408d-a4d9-13e7d992c9a6'), UUID_TO_BIN('be39b7dd-fe38-44f4-8ada-451681d01c7f'), 'Av. Costa 123, Mar del Plata', 'Hotel de lujo con spa y piscina', 'Hotel Costa Azul'),
@@ -118,7 +118,7 @@ VALUES (UUID_TO_BIN('8a9b6e3d-27b2-4a0d-9992-d35031e5c7a8'), 0, 'Hotel frente al
 --   (32000, UUID_TO_BIN('bcf324b5-38da-4b45-9b99-2d2c3be48c78'), UUID_TO_BIN('be39b7dd-fe38-44f4-8ada-451681d01c8f'), 'Calle Luna 123, Rosario', 'Departamento amueblado, ideal para familias', 'Departamento Luna');
 --
 
-INSERT INTO stays_policies
+INSERT IGNORE INTO stays_policies
 (stays_id, policies_id)
 VALUES
 --     DUNA
@@ -142,7 +142,7 @@ VALUES
 (UUID_TO_BIN('f8a83214-182b-4204-b44a-31e82f9c5ca4'), UUID_TO_BIN('fe9f0734-33c2-44d1-94a2-3fe1b76c45e9')),
 (UUID_TO_BIN('f8a83214-182b-4204-b44a-31e82f9c5ca4'), UUID_TO_BIN('4f21d2f0-63c3-41e9-b91d-8c81f83a9678'));
 
-INSERT INTO stay_feature (feature_id, stay_id)
+INSERT IGNORE INTO stay_feature (feature_id, stay_id)
 VALUES
     -- Hotel Duna
     (UUID_TO_BIN('1c9f77b1-1be1-4b18-a43b-287b0989238e'), UUID_TO_BIN('8a9b6e3d-27b2-4a0d-9992-d35031e5c7a8')),
@@ -259,7 +259,7 @@ VALUES
 --   (UUID_TO_BIN('f8c2ab10-f70a-467e-92a1-f3ffeb1266e0'), UUID_TO_BIN('bcf324b5-38da-4b45-9b99-2d2c3be48c78')),
 --   (UUID_TO_BIN('61f63e53-5092-450b-b17c-0e340d1258d0'), UUID_TO_BIN('bcf324b5-38da-4b45-9b99-2d2c3be48c78'));
 --
-INSERT INTO stay_images (id, url)
+INSERT IGNORE INTO stay_images (id, url)
 VALUES
     -- Hotel Duna
     (UUID_TO_BIN('e1338d35-9944-4861-842b-4fce19759cae'), 'hotel-duna-1.jpg'),
@@ -376,7 +376,7 @@ VALUES
 --   (UUID_TO_BIN('f6e92e2b-12bc-47a1-c7c6-90f81997d2b3'), 'departamento-luna-4.jpg'),
 --   (UUID_TO_BIN('a8f83f4b-23cd-4f03-d3a5-6f319bde2c91'), 'departamento-luna-5.jpg');
 --
-INSERT INTO stays_images (stays_id, images_id)
+INSERT IGNORE INTO stays_images (stays_id, images_id)
 VALUES
     -- Hotel Duna
     (UUID_TO_BIN('8a9b6e3d-27b2-4a0d-9992-d35031e5c7a8'), UUID_TO_BIN('e1338d35-9944-4861-842b-4fce19759cae')),
