@@ -1,0 +1,4 @@
+CREATE DATABASE IF NOT EXISTS plax_db;
+CREATE USER IF NOT EXISTS 'dbwebapp'@'%' IDENTIFIED BY 'dbwebapp';
+GRANT ALL PRIVILEGES ON dbwebappdb.* TO 'dbwebapp'@'%';
+FLUSH PRIVILEGES;

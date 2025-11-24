@@ -117,7 +117,7 @@ services:
       retries: 30
       start_period: 60s
 
-  
+
   # Backend de la aplicación
   backend:
     image: sofiayanez98/plax-backend:latest
@@ -173,7 +173,7 @@ services:
     depends_on:
       - backend
       - frontend
-  
+
   #  Backup automático de la base de datos
   mysql-backup:
     image: mysql:8.0

@@ -30,7 +30,7 @@ export const Footer = () => {
             <Link to='/'>
                 <figure className='footer__isologo'>
                     <img src={Isologo} height={40} width={40} alt="Hotel" />
-                    <figcaption>&copy; 2024 PLAX</figcaption>
+                    <figcaption>&copy; 2025 PLAX</figcaption>
                     {/* INTEGRANTES DEL GRUPO HIA */}
                     <figcaption>Integrantes del Grupo: Yufra, Marcelo Alejandro 4308 - ...</figcaption>
                 </figure>
