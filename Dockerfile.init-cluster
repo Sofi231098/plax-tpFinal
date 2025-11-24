@@ -3,8 +3,8 @@ FROM mysql/mysql-server:8.0
 ENV LC_ALL=C.UTF-8
 ENV LANG=C.UTF-8
 
-COPY ./01-setup.sql /docker-entrypoint-initdb.d/01-setup.sql
-COPY ./02-init-cluster.sh /docker-entrypoint-initdb.d/02-init-cluster.sh
+COPY ./scripts/01-setup.sql /docker-entrypoint-initdb.d/01-setup.sql
+COPY ./scripts/03-init-cluster.sh /docker-entrypoint-initdb.d/02-init-cluster.sh
 
 RUN chmod +x /docker-entrypoint-initdb.d/02-init-cluster.sh
 
