@@ -151,6 +151,8 @@ services:
       - ./plax-frontend/default.conf:/etc/nginx/conf.d/default.conf
     depends_on:
       - backend
+    labels:
+      com.centurylinklabs.watchtower.enable: "true"
 
   # Cliente MySQL (phpMyAdmin)
   phpmyadmin:
