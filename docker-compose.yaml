@@ -17,7 +17,7 @@ services:
       MYSQL_ROOT_PASSWORD: root
     hostname: mysql-server-1
     ports:
-    - "3306:3306"
+      - "3306:3306"
     networks:
       - plax-net
     volumes:
@@ -45,7 +45,7 @@ services:
       MYSQL_ROOT_PASSWORD: root
     hostname: mysql-server-2
     ports:
-    - "3307:3306"
+      - "3307:3306"
     networks:
       - plax-net
     volumes:
@@ -73,7 +73,7 @@ services:
       MYSQL_ROOT_PASSWORD: root
     hostname: mysql-server-3
     ports:
-    - "3308:3306"
+      - "3308:3306"
     networks:
       - plax-net
     volumes:
@@ -85,7 +85,7 @@ services:
       retries: 20
       start_period: 20s
 
-  # Nodo inicializador del Cluster
+  # Nodo inicializador del Cluster (se ejecuta una sola vez)
   init-cluster:
     container_name: init-cluster
     build:
@@ -108,7 +108,7 @@ services:
   mysql-router:
     container_name: mysql-router
     image: mysql/mysql-router:8.0
-    restart: on-failure
+    restart: always
     environment:
       MYSQL_USER: clusteradmin
       MYSQL_PASSWORD: cladmin
@@ -125,17 +125,18 @@ services:
         condition: service_healthy
       mysql-server-3:
         condition: service_healthy
-      init-cluster:
-        condition: service_completed_successfully
     healthcheck:
-      test: ["CMD", "mysqladmin", "ping", "-h", "mysql-router", "-P", "6446"]
-      interval: 5s
+      test: ["CMD-SHELL", "mysqladmin ping -h 127.0.0.1 -P 6446 -u $MYSQL_USER -p$MYSQL_PASSWORD"]
+      interval: 10s
       timeout: 5s
-      retries: 10
+      retries: 30
+      start_period: 60s
+
   
   # Backend de la aplicación
   backend:
     image: sofiayanez98/plax-backend:latest
+    # build: ./plax-backend/
     container_name: plax_backend
     restart: always
     env_file:
@@ -146,23 +147,15 @@ services:
       - plax-net
     volumes:
       - ./plax-backend/uploads:/app/uploads
-      - ./plax-backend/.env:/app/.env        # <- monta .env en /app/.env
-      - ./plax-backend/.env:/.env 
     depends_on:
-      mysql-router:
-        condition: service_healthy
-    healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:8080/actuator/health"]
-      interval: 10s
-      timeout: 3s
-      retries: 5
-      start_period: 10s
+      - mysql-router
     labels:
       com.centurylinklabs.watchtower.enable: "true"
 
   # Frontend de la aplicación
   frontend:
     image: sofiayanez98/plax-frontend:latest
+    # build: ./plax-frontend/
     container_name: plax_frontend
     restart: always
     environment:
@@ -178,7 +171,7 @@ services:
     labels:
       com.centurylinklabs.watchtower.enable: "true"
 
-  # Cliente MySQL
+  # Cliente MySQL (phpMyAdmin)
   phpmyadmin:
     image: phpmyadmin/phpmyadmin
     container_name: phpmyadmin
@@ -196,6 +189,79 @@ services:
       - backend
       - frontend
   
+  #  Backup automático de la base de datos
+  mysql-backup:
+    image: mysql:8.0
+    container_name: mysql-backup
+    restart: always
+    depends_on:
+        mysql-server-1:
+          condition: service_healthy
+    networks:
+      - plax-net
+    volumes:
+      - ./backups:/backups
+      - ./scripts/backup.sh:/usr/local/bin/backup.sh
+    command: [ "bash", "-c", "chmod +x /usr/local/bin/backup.sh && /usr/local/bin/backup.sh" ]
+
+  # Contenedor para ejecutar MySQL Tuner y Percona Toolkit
+  mysql-tuner:
+    build:
+      context: .
+      dockerfile: Dockerfile.mysql-tuner
+    container_name: mysql-tuner
+    restart: "no"
+    networks:
+      - plax-net
+    depends_on:
+      mysql-server-1:
+        condition: service_healthy
+
+  # # Monitoreo con Prometheus y Grafana
+  mysqld-exporter:
+    container_name: mysqld-exporter
+    image: prom/mysqld-exporter:v0.16.0
+    restart: "unless-stopped"
+    volumes:
+      - ./monitoreo/mysqld-exporter/mysqld-exporter.cnf:/my.cnf
+      - ./monitoreo/mysqld-exporter/config:/etc/mysqld_exporter
+    ports:
+      - "9104:9104"
+    networks:
+      - plax-net
+    depends_on:
+      mysql-server-1:
+        condition: service_healthy
+    command:
+      - --config.my-cnf=/my.cnf
+
+  prometheus:
+    container_name: prometheus
+    image: prom/prometheus:v3.7.3
+    restart: "unless-stopped"
+    volumes:
+      - ./monitoreo/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
+      - ./monitoreo/prometheus/data:/prometheus
+    ports:
+      - "9090:9090"
+    networks:
+      - plax-net
+    depends_on:
+      - mysqld-exporter
+
+  grafana:
+    container_name: grafana
+    image: grafana/grafana:latest
+    restart: "unless-stopped"
+    volumes:
+      - ./monitoreo/grafana/data:/var/lib/grafana
+    ports:
+      - "3000:3000"
+    networks:
+      - plax-net
+    depends_on:
+      - prometheus
+
   # Watchtower - auto-update container images
   watchtower:
     image: containrrr/watchtower:latest
@@ -203,6 +269,8 @@ services:
     restart: always
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
+    depends_on:
+      - grafana
     command: --interval 60 --label-enable --cleanup
 
 volumes:
