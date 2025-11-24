@@ -18,16 +18,12 @@ WORKDIR /app
 
 # Copiamos solo el jar compilado desde la etapa build
 COPY --from=build /app/target/*.jar app.jar
-<<<<<<< HEAD
-COPY .env .env
-=======
 #COPY .env .env
 
 # Crear usuario no-root
 RUN addgroup --system app && adduser --system --ingroup app app
 USER app
 
->>>>>>> origin/main
 
 EXPOSE 8080
 CMD ["java", "-jar", "app.jar"]
