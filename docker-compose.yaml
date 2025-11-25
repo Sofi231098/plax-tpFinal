@@ -119,8 +119,8 @@ services:
 
   # Backend de la aplicación
   backend:
-    # image: sofiayanez98/plax-backend:latest
-    build: ./plax-backend/
+    image: sofiayanez98/plax-backend:latest
+    # build: ./plax-backend/
     container_name: plax_backend
     restart: always
     env_file:
@@ -138,8 +138,8 @@ services:
 
   # Frontend de la aplicación
   frontend:
-    # image: sofiayanez98/plax-frontend:latest
-    build: ./plax-frontend/
+    image: sofiayanez98/plax-frontend:latest
+    # build: ./plax-frontend/
     container_name: plax_frontend
     restart: always
     ports:
