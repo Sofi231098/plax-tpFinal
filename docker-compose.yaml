@@ -1,127 +1,142 @@
 services:
 
   # Nodo de Datos 1
-  mysql-server-1:
-    container_name: mysql-server-1
-    build: .
-    restart: always
-    command:
-      - --server-id=1
-      - --default-authentication-plugin=mysql_native_password
-    environment:
-      MYSQL_ROOT_PASSWORD: root
-    hostname: mysql-server-1
-    ports:
-      - "3306:3306"
-    networks:
-      - plax-net
-    volumes:
-      - mysql1_data:/var/lib/mysql
-    healthcheck:
-      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-proot"]
-      interval: 5s
-      timeout: 5s
-      retries: 20
-      start_period: 20s
+  # mysql-server-1:
+  #   container_name: mysql-server-1
+  #   build: .
+  #   restart: always
+  #   command:
+  #     - --server-id=1
+  #     - --default-authentication-plugin=mysql_native_password
+  #   environment:
+  #     MYSQL_ROOT_PASSWORD: root
+  #   hostname: mysql-server-1
+  #   ports:
+  #     - "3306:3306"
+  #   networks:
+  #     - plax-net
+  #   volumes:
+  #     - mysql1_data:/var/lib/mysql
+  #   healthcheck:
+  #     test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-proot"]
+  #     interval: 5s
+  #     timeout: 5s
+  #     retries: 20
+  #     start_period: 20s
 
-  # Nodo de Datos 2
-  mysql-server-2:
-    container_name: mysql-server-2
-    build: .
-    restart: always
-    command:
-      - --server-id=2
-      - --default-authentication-plugin=mysql_native_password
-    environment:
-      MYSQL_ROOT_PASSWORD: root
-    hostname: mysql-server-2
-    ports:
-      - "3307:3306"
-    networks:
-      - plax-net
-    volumes:
-      - mysql2_data:/var/lib/mysql
-    healthcheck:
-      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-proot"]
-      interval: 5s
-      timeout: 5s
-      retries: 20
-      start_period: 20s
+  # # Nodo de Datos 2
+  # mysql-server-2:
+  #   container_name: mysql-server-2
+  #   build: .
+  #   restart: always
+  #   command:
+  #     - --server-id=2
+  #     - --default-authentication-plugin=mysql_native_password
+  #   environment:
+  #     MYSQL_ROOT_PASSWORD: root
+  #   hostname: mysql-server-2
+  #   ports:
+  #     - "3307:3306"
+  #   networks:
+  #     - plax-net
+  #   volumes:
+  #     - mysql2_data:/var/lib/mysql
+  #   healthcheck:
+  #     test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-proot"]
+  #     interval: 5s
+  #     timeout: 5s
+  #     retries: 20
+  #     start_period: 20s
 
-  # Nodo de Datos 3
-  mysql-server-3:
-    container_name: mysql-server-3
-    build: .
-    restart: always
-    command:
-      - --server-id=3
-      - --default-authentication-plugin=mysql_native_password
-    environment:
-      MYSQL_ROOT_PASSWORD: root
-    hostname: mysql-server-3
-    ports:
-      - "3308:3306"
-    networks:
-      - plax-net
-    volumes:
-      - mysql3_data:/var/lib/mysql
-    healthcheck:
-      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-proot"]
-      interval: 5s
-      timeout: 5s
-      retries: 20
-      start_period: 20s
+  # # Nodo de Datos 3
+  # mysql-server-3:
+  #   container_name: mysql-server-3
+  #   build: .
+  #   restart: always
+  #   command:
+  #     - --server-id=3
+  #     - --default-authentication-plugin=mysql_native_password
+  #   environment:
+  #     MYSQL_ROOT_PASSWORD: root
+  #   hostname: mysql-server-3
+  #   ports:
+  #     - "3308:3306"
+  #   networks:
+  #     - plax-net
+  #   volumes:
+  #     - mysql3_data:/var/lib/mysql
+  #   healthcheck:
+  #     test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-proot"]
+  #     interval: 5s
+  #     timeout: 5s
+  #     retries: 20
+  #     start_period: 20s
 
   # Nodo inicializador del Cluster (se ejecuta una sola vez)
-  init-cluster:
-    container_name: init-cluster
-    build:
-      context: .
-      dockerfile: Dockerfile.init-cluster
-    restart: "no"
-    networks:
-      - plax-net
-    depends_on:
-      mysql-server-1:
-        condition: service_healthy
-      mysql-server-2:
-        condition: service_healthy
-      mysql-server-3:
-        condition: service_healthy
+  # init-cluster:
+  #   container_name: init-cluster
+  #   build:
+  #     context: .
+  #     dockerfile: Dockerfile.init-cluster
+  #   restart: "no"
+  #   networks:
+  #     - plax-net
+  #   depends_on:
+  #     mysql-server-1:
+  #       condition: service_healthy
+  #     mysql-server-2:
+  #       condition: service_healthy
+  #     mysql-server-3:
+  #       condition: service_healthy
 
-  # MySQL Router
+  # # MySQL Router
+  # mysql-router:
+  #   container_name: mysql-router
+  #   image: mysql/mysql-router:8.0
+  #   restart: always
+  #   environment:
+  #     MYSQL_USER: clusteradmin
+  #     MYSQL_PASSWORD: cladmin
+  #     MYSQL_HOST: mysql-server-1
+  #     MYSQL_PORT: 3306
+  #   networks:
+  #     - plax-net
+  #   ports:
+  #     - "6446:6446"
+  #   depends_on:
+  #     mysql-server-1:
+  #       condition: service_healthy
+  #     mysql-server-2:
+  #       condition: service_healthy
+  #     mysql-server-3:
+  #       condition: service_healthy
+  #   healthcheck:
+  #     test: ["CMD-SHELL", "mysqladmin ping -h 127.0.0.1 -P 6446 -u $MYSQL_USER -p$MYSQL_PASSWORD"]
+  #     interval: 10s
+  #     timeout: 5s
+  #     retries: 30
+  #     start_period: 60s
+
   mysql-router:
+    image: mysql:8.0
     container_name: mysql-router
-    image: mysql/mysql-router:8.0
     restart: always
     environment:
-      MYSQL_USER: clusteradmin
-      MYSQL_PASSWORD: cladmin
-      MYSQL_HOST: mysql-server-1
-      MYSQL_PORT: 3306
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: plax_db
+      # MYSQL_USER: clusteradmin
+      # MYSQL_PASSWORD: cladmin
+    ports:
+      - "6446:3306"
+    volumes:
+      - mysql1_data:/var/lib/mysql
     networks:
       - plax-net
-    ports:
-      - "6446:6446"
-    depends_on:
-      mysql-server-1:
-        condition: service_healthy
-      mysql-server-2:
-        condition: service_healthy
-      mysql-server-3:
-        condition: service_healthy
-    healthcheck:
-      test: ["CMD-SHELL", "mysqladmin ping -h 127.0.0.1 -P 6446 -u $MYSQL_USER -p$MYSQL_PASSWORD"]
-      interval: 10s
-      timeout: 5s
-      retries: 30
-      start_period: 60s
-
 
   # Backend de la aplicación
   backend:
-    image: sofiayanez98/plax-backend:latest
-    # build: ./plax-backend/
+    # image: sofiayanez98/plax-backend:latest
+    build: ./plax-backend/
     container_name: plax_backend
     restart: always
     env_file:
@@ -132,29 +147,32 @@ services:
       - plax-net
     volumes:
       - ./plax-backend/uploads:/app/uploads
-    depends_on:
-      - mysql-router
-    labels:
-      com.centurylinklabs.watchtower.enable: "true"
+    # depends_on:
+    #   - mysql-router
+    # labels:
+    #   com.centurylinklabs.watchtower.enable: "true"
 
   # Frontend de la aplicación
   frontend:
-    image: sofiayanez98/plax-frontend:latest
-    # build: ./plax-frontend/
+    # image: sofiayanez98/plax-frontend:latest
+    build: ./plax-frontend/
     container_name: plax_frontend
     restart: always
     environment:
-      VITE_API_URL: http://localhost:8080
+      # VITE_API_URL: http://localhost:8080
+      # VITE_API_URL: https://readily-exp-refined-tba.trycloudflarex.com
+      API_URL: https://readily-exp-refined-tba.trycloudflare.com
     ports:
       - "5173:80"
     networks:
       - plax-net
     volumes:
       - ./plax-frontend/default.conf:/etc/nginx/conf.d/default.conf
+      - ./plax-frontend/public/config.js:/usr/share/nginx/html/config.js
     depends_on:
       - backend
-    labels:
-      com.centurylinklabs.watchtower.enable: "true"
+    # labels:
+    #   com.centurylinklabs.watchtower.enable: "true"
 
   # Cliente MySQL (phpMyAdmin)
   phpmyadmin:
@@ -163,9 +181,9 @@ services:
     restart: always
     environment:
       PMA_HOST: mysql-router
-      PMA_PORT: 6446
-      PMA_USER: clusteradmin
-      PMA_PASSWORD: cladmin
+      PMA_PORT: 3306
+      PMA_USER: root
+      PMA_PASSWORD: root
     ports:
       - "8081:80"
     networks:
@@ -175,88 +193,88 @@ services:
       - frontend
 
   #  Backup automático de la base de datos
-  mysql-backup:
-    image: mysql:8.0
-    container_name: mysql-backup
-    restart: always
-    depends_on:
-        mysql-server-1:
-          condition: service_healthy
-    networks:
-      - plax-net
-    volumes:
-      - ./backups:/backups
-      - ./scripts/backup.sh:/usr/local/bin/backup.sh
-    command: [ "bash", "-c", "chmod +x /usr/local/bin/backup.sh && /usr/local/bin/backup.sh" ]
+  # mysql-backup:
+  #   image: mysql:8.0
+  #   container_name: mysql-backup
+  #   restart: always
+  #   depends_on:
+  #       mysql-server-1:
+  #         condition: service_healthy
+  #   networks:
+  #     - plax-net
+  #   volumes:
+  #     - ./backups:/backups
+  #     - ./scripts/backup.sh:/usr/local/bin/backup.sh
+  #   command: [ "bash", "-c", "chmod +x /usr/local/bin/backup.sh && /usr/local/bin/backup.sh" ]
 
-  # Contenedor para ejecutar MySQL Tuner y Percona Toolkit
-  mysql-tuner:
-    build:
-      context: .
-      dockerfile: Dockerfile.mysql-tuner
-    container_name: mysql-tuner
-    restart: "no"
-    networks:
-      - plax-net
-    depends_on:
-      mysql-server-1:
-        condition: service_healthy
+  # # Contenedor para ejecutar MySQL Tuner y Percona Toolkit
+  # mysql-tuner:
+  #   build:
+  #     context: .
+  #     dockerfile: Dockerfile.mysql-tuner
+  #   container_name: mysql-tuner
+  #   restart: "no"
+  #   networks:
+  #     - plax-net
+  #   depends_on:
+  #     mysql-server-1:
+  #       condition: service_healthy
 
-  # # Monitoreo con Prometheus y Grafana
-  mysqld-exporter:
-    container_name: mysqld-exporter
-    image: prom/mysqld-exporter:v0.16.0
-    restart: "unless-stopped"
-    volumes:
-      - ./monitoreo/mysqld-exporter/mysqld-exporter.cnf:/my.cnf
-      - ./monitoreo/mysqld-exporter/config:/etc/mysqld_exporter
-    ports:
-      - "9104:9104"
-    networks:
-      - plax-net
-    depends_on:
-      mysql-server-1:
-        condition: service_healthy
-    command:
-      - --config.my-cnf=/my.cnf
+  # # # Monitoreo con Prometheus y Grafana
+  # mysqld-exporter:
+  #   container_name: mysqld-exporter
+  #   image: prom/mysqld-exporter:v0.16.0
+  #   restart: "unless-stopped"
+  #   volumes:
+  #     - ./monitoreo/mysqld-exporter/mysqld-exporter.cnf:/my.cnf
+  #     - ./monitoreo/mysqld-exporter/config:/etc/mysqld_exporter
+  #   ports:
+  #     - "9104:9104"
+  #   networks:
+  #     - plax-net
+  #   depends_on:
+  #     mysql-server-1:
+  #       condition: service_healthy
+  #   command:
+  #     - --config.my-cnf=/my.cnf
 
-  prometheus:
-    container_name: prometheus
-    image: prom/prometheus:v3.7.3
-    restart: "unless-stopped"
-    volumes:
-      - ./monitoreo/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
-      - ./monitoreo/prometheus/data:/prometheus
-    ports:
-      - "9090:9090"
-    networks:
-      - plax-net
-    depends_on:
-      - mysqld-exporter
+  # prometheus:
+  #   container_name: prometheus
+  #   image: prom/prometheus:v3.7.3
+  #   restart: "unless-stopped"
+  #   volumes:
+  #     - ./monitoreo/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
+  #     - ./monitoreo/prometheus/data:/prometheus
+  #   ports:
+  #     - "9090:9090"
+  #   networks:
+  #     - plax-net
+  #   depends_on:
+  #     - mysqld-exporter
 
-  grafana:
-    container_name: grafana
-    image: grafana/grafana:latest
-    restart: "unless-stopped"
-    volumes:
-      - ./monitoreo/grafana/data:/var/lib/grafana
-    ports:
-      - "3000:3000"
-    networks:
-      - plax-net
-    depends_on:
-      - prometheus
+  # grafana:
+  #   container_name: grafana
+  #   image: grafana/grafana:latest
+  #   restart: "unless-stopped"
+  #   volumes:
+  #     - ./monitoreo/grafana/data:/var/lib/grafana
+  #   ports:
+  #     - "3000:3000"
+  #   networks:
+  #     - plax-net
+  #   depends_on:
+  #     - prometheus
 
   # Watchtower - auto-update container images
-  watchtower:
-    image: containrrr/watchtower:latest
-    container_name: watchtower
-    restart: always
-    volumes:
-      - /var/run/docker.sock:/var/run/docker.sock
-    depends_on:
-      - grafana
-    command: --interval 60 --label-enable --cleanup
+  # watchtower:
+  #   image: containrrr/watchtower:latest
+  #   container_name: watchtower
+  #   restart: always
+  #   volumes:
+  #     - /var/run/docker.sock:/var/run/docker.sock
+  #   depends_on:
+  #     - grafana
+  #   command: --interval 60 --label-enable --cleanup
 
 volumes:
   mysql1_data:

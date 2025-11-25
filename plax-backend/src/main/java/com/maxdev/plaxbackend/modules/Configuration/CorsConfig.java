@@ -15,7 +15,8 @@ public class CorsConfig {
             @Override
             public void addCorsMappings(CorsRegistry registry) {
                 registry.addMapping("/**")
-                        .allowedOrigins("http://localhost:5173")
+                        // .allowedOrigins("http://localhost:5173", "https://hill-real-reaching-responses.trycloudflare.com")
+                        .allowedOriginPatterns("*")  // <── ACEPTA CUALQUIER ORIGEN
                         .allowedMethods("GET", "POST", "PUT", "DELETE")
                         .allowedHeaders("Authorization", "Content-Type") // Cabeceras permitidas
                         .exposedHeaders("Authorization") // Cabeceras visibles en la respuesta

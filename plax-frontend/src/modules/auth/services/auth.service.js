@@ -1,7 +1,10 @@
+const API_URL = window.API_URL;
+
 const authService = {
     login: async (body) => {
         try {
-            const response = await fetch('http://localhost:8080/api/auth/login', {
+            console.log('API_URL:', API_URL);
+            const response = await fetch(`${API_URL}/api/auth/login`, {
                 method: 'POST',
                 body: JSON.stringify(body),
                 headers: {
@@ -28,7 +31,8 @@ const authService = {
     },
     register: async (body) => {
         try {
-            const response = await fetch('http://localhost:8080/api/auth/register', {
+            console.log('API_URL:', API_URL);
+            const response = await fetch(`${API_URL}/api/auth/register`, {
                 method: 'POST',
                 body: JSON.stringify(body),
                 headers: {

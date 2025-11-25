@@ -68,7 +68,10 @@ public class SecurityConfiguration {
     public UrlBasedCorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration corsConfig = new CorsConfiguration();
         corsConfig.setAllowCredentials(true);
-        corsConfig.addAllowedOrigin("http://localhost:5173");
+        corsConfig.addAllowedOriginPattern("*");  // PERMITE CUALQUIER ORIGEN
+        // corsConfig.addAllowedOrigin("http://localhost:5173");
+        // corsConfig.addAllowedOrigin("https://hill-real-reaching-responses.trycloudflare.com");
+        // corsConfig.addAllowedOrigin("*");
         corsConfig.addAllowedHeader("*");
         corsConfig.addAllowedMethod("*");
         corsConfig.addExposedHeader("Authorization");
