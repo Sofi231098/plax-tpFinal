@@ -12,8 +12,15 @@ RUN npm run build
 
 # ---- Etapa final: servir archivos estáticos ----
 FROM nginx:stable-alpine
-WORKDIR /usr/share/nginx/html
-COPY --from=build /app/dist ./
+
+# Copiamos la carpeta generada por Vite
+COPY --from=build /app/dist /usr/share/nginx/html
+
+# Copiamos el script que inyectará config.js
+COPY inject-config.sh /inject-config.sh
+RUN chmod +x /inject-config.sh
 
 EXPOSE 80
-CMD ["nginx", "-g", "daemon off;"]
+
+# Usamos nuestro script como entrypoint
+CMD ["/inject-config.sh"]
