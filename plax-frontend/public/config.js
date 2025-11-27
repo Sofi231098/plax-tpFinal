@@ -1,5 +1,5 @@
 // ***********************************************
-// URL del backend por Cloudflare Tunnel
+// URL del backend por URL PUBLICA DE AWS EC2
 // ***********************************************
 window.API_URL = "http://18.116.53.192:8080" || "http://localhost:8080";
 
