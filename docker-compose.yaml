@@ -253,6 +253,8 @@ services:
     restart: always
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
+    environment:
+      - DOCKER_API_VERSION=1.44
     depends_on:
       - grafana
     command: --interval 60 --label-enable --cleanup
